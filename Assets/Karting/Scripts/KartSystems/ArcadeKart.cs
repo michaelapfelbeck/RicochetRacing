@@ -334,7 +334,7 @@ namespace KartGame.KartSystems
                 WantsToDrift = Input.Brake && Vector3.Dot(Rigidbody.velocity, transform.forward) > 0.0f;
             }
         }
-
+        int lastCount = 0;
         void TickPowerups()
         {
             // remove all elapsed powerups
@@ -360,6 +360,12 @@ namespace KartGame.KartSystems
 
             // clamp values in finalstats
             m_FinalStats.Grip = Mathf.Clamp(m_FinalStats.Grip, 0, 1);
+
+            if(m_ActivePowerupList.Count < lastCount)
+            {
+                Debug.Log("OFF");
+            }
+            lastCount = m_ActivePowerupList.Count;
         }
 
         void GroundAirbourne()
