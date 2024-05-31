@@ -5,6 +5,13 @@ using UnityEngine.Events;
 
 namespace KartGame.KartSystems
 {
+    public struct BounceData
+    {
+        // world point
+        public Vector3 point;
+        // normal of the surface hit
+        public Vector3 normal;
+    }
 
     /// <summary>
     /// Creates bounce collisions that other systems react to.
@@ -37,7 +44,7 @@ namespace KartGame.KartSystems
         float resumeTime;
         bool hasCollided;
 
-        public UnityEvent OnBounce;
+        public UnityEvent<BounceData> OnBounce;
 
         void Start()
         {
@@ -66,16 +73,14 @@ namespace KartGame.KartSystems
                         return;
                     }
 
-                    // Calculate the incident vector of the kart colliding into whatever object
-                    Vector3 incidentVector = hit.point - origin;
+                        BounceData data = new BounceData { 
+                            normal = hit.normal,
+                            point = hit.point
+                        };
 
-                    // Calculate the reflection vector using the incident vector of the collision
-                    Vector3 hitNormal = hit.normal.normalized;
-
-                    BounceFlag = hasCollided = true;
                     resumeTime = Time.time + CoolOffTime;
 
-                    OnBounce.Invoke();
+                    OnBounce.Invoke(data);
 
                     return;
                 }
@@ -86,7 +91,6 @@ namespace KartGame.KartSystems
         {
             if (Time.time > resumeTime && hasCollided)
             {
-                kart.SetCanMove(true);
                 hasCollided = false;
             }
         }
