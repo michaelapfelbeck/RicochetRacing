@@ -2,6 +2,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.VFX;
+using System.Linq;
 
 namespace KartGame.KartSystems
 {
@@ -174,6 +175,7 @@ namespace KartGame.KartSystems
         bool m_CanMove = true;
         List<StatPowerup> m_ActivePowerupList = new List<StatPowerup>();
         ArcadeKart.Stats m_FinalStats;
+        public Stats CurrentStats { get => m_FinalStats; }
 
         Quaternion m_LastValidRotation;
         Vector3 m_LastValidPosition;
@@ -184,6 +186,20 @@ namespace KartGame.KartSystems
         public void AddPowerup(StatPowerup statPowerup) => m_ActivePowerupList.Add(statPowerup);
         public void SetCanMove(bool move) => m_CanMove = move;
         public float GetMaxSpeed() => Mathf.Max(m_FinalStats.TopSpeed, m_FinalStats.ReverseSpeed);
+
+        public int GetPowerupCount(string id = null)
+        {
+            if(m_ActivePowerupList.Count == 0)
+            {
+                return 0;
+            }
+
+            if(id == null)
+            {
+                return m_ActivePowerupList.Count;
+            }
+            return m_ActivePowerupList.Where(x=>x.PowerUpID == id).Count();
+        }
 
         private void ActivateDriftVFX(bool active)
         {
@@ -363,7 +379,7 @@ namespace KartGame.KartSystems
 
             if(lastCount != m_ActivePowerupList.Count)
             {
-                Debug.LogFormat("Powerfup count {0}", m_ActivePowerupList.Count);
+                Debug.LogFormat("Powerup count {0}", m_ActivePowerupList.Count);
             }
 
             lastCount = m_ActivePowerupList.Count;

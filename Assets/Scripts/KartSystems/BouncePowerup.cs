@@ -41,10 +41,11 @@ public class BouncePowerup : MonoBehaviour
         ArcadeKart.StatPowerup stats = new ArcadeKart.StatPowerup
         {
             MaxTime = boostStats.MaxTime,
+            PowerUpID = boostStats.PowerUpID,
             modifiers = new ArcadeKart.Stats
             {
                 TopSpeed = boostStats.modifiers.TopSpeed,
-                Acceleration = boostStats.modifiers.Acceleration
+                Acceleration = boostStats.modifiers.Acceleration,
             }
         };
         kart.AddPowerup(stats);
