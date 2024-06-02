@@ -3,6 +3,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
+using UnityEngine.TextCore.Text;
+using UnityEngine.UI;
 
 public class PlayerSpeedGauge : MonoBehaviour
 {
@@ -15,19 +18,22 @@ public class PlayerSpeedGauge : MonoBehaviour
     private ArcadeKart kart;
     [SerializeField]
     private RectTransform speedGauge;
+    private Image gaugeImage;
     [SerializeField]
     private GameObject extension1;
     [SerializeField]
     private GameObject extension2;
     [SerializeField]
     private GameObject extension3;
-
+    [SerializeField]
+    private Gradient colorGradient;
     void Start()
     {
         if(speedGauge == null)
         {
             enabled = false;
         }
+        gaugeImage = speedGauge.GetComponent<Image>();
         extension1?.SetActive(false);
         extension2?.SetActive(false);
         extension3?.SetActive(false);
@@ -41,16 +47,18 @@ public class PlayerSpeedGauge : MonoBehaviour
             return;
         }
         //LocalSpeed(), CurrentStats
-        SetSpeedGaugeWidth();
+        SetSpeedGaugeState();
         SetExtensionVisibility();
     }
 
-    private void SetSpeedGaugeWidth()
+    private void SetSpeedGaugeState()
     {
         float kartSpeed = kart.LocalSpeed();
         int powerupCount = kart.GetPowerupCount(boostId);
         float maxWidth = defaultMax + extensionWidth * powerupCount;
         speedGauge.sizeDelta = new Vector2(maxWidth * kartSpeed, speedGauge.sizeDelta.y);
+        Color barColor = colorGradient.Evaluate(kartSpeed);
+        gaugeImage.color = barColor;
     }
 
     private void SetExtensionVisibility()
